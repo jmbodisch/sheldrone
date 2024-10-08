@@ -8,18 +8,18 @@ from scraper import queue_download
 from scraper import queue_batch_download
 
 load_dotenv()
-GUILD = discord.Object(id=int(os.getenv('TEST_GUILD'))) 
+# GUILD = discord.Object(id=int(os.getenv('TEST_GUILD'))) 
 
 class BotClient(discord.Client):
     def __init__(self, *, intents: discord.Intents):
         super().__init__(intents=intents)
         self.tree = app_commands.CommandTree(self)
     async def setup_hook(self):
-        # self.tree.clear_commands(guild=None)
-        # await self.tree.sync(guild=None)
-        self.tree.clear_commands(guild=GUILD)
-        self.tree.copy_global_to(guild=GUILD)
-        await self.tree.sync(guild=GUILD)
+        self.tree.clear_commands(guild=None)
+        await self.tree.sync(guild=None)
+        # self.tree.clear_commands(guild=GUILD)
+        # self.tree.copy_global_to(guild=GUILD)
+        # await self.tree.sync(guild=GUILD)
 
 TOKEN = os.getenv('DTOKEN')
 
