@@ -15,8 +15,8 @@ class BotClient(discord.Client):
         super().__init__(intents=intents)
         self.tree = app_commands.CommandTree(self)
     async def setup_hook(self):
-        self.tree.clear_commands(guild=None)
-        await self.tree.sync(guild=None)
+        # self.tree.clear_commands(guild=None)
+        # await self.tree.sync(guild=None)
         self.tree.clear_commands(guild=GUILD)
         self.tree.copy_global_to(guild=GUILD)
         await self.tree.sync(guild=GUILD)
