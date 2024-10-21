@@ -201,7 +201,7 @@ async def getrecentreplays(interaction: discord.Interaction, number: int | None=
     if tokens:
         replays = scraper.get_replay_history(tokens)
         if replays:
-            if len(replays > 30):
+            if len(replays) > 30:
                 replays = replays[:30]
             ids=list()
             for r in range(number):
