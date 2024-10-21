@@ -63,6 +63,7 @@ def load_tokens(uid: str, opt=0) -> splatnet3_scraper.auth.TokenManager | None:
     result = cursor.fetchall()
     if result:
         token_man = splatnet3_scraper.auth.TokenManagerConstructor.from_session_token(result[0][1])
+        token_man.nso._version = constants.VERSION_OVERRIDE
         if result[0][3]:
             token_man.add_token(result[0][3], name="gtoken", timestamp=float(result[0][4]))
         elif opt==0:

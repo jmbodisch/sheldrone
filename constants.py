@@ -40,6 +40,8 @@ REPLAY_URL = 'https://s.nintendo.com/av5ja-lp1/znca/game/4834290508791808?p=%2Fr
 
 SPLATNET_URL = "https://api.lp1.av5ja.srv.nintendo.net"
 
+VERSION_OVERRIDE = "2.10.1"
+
 medals = {
     "#1 Overall Splatter":"<:gold:1271940643924611072>",
     "#1 Splat Zone Inker":"<:gold:1271940643924611072>",
