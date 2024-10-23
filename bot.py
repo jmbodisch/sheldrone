@@ -204,7 +204,7 @@ async def getrecentreplays(interaction: discord.Interaction, number: int=30):
             if len(replays) > 30:
                 replays = replays[:30]
             ids=list()
-            for r in range(number):
+            for r in range(number-1):
                 ids.append(replays[r]['id'])
             a = scraper.get_user_info(tokens)
             e = display.genBatch(replays, a, number)
