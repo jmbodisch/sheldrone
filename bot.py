@@ -188,7 +188,7 @@ async def getbatch(interaction: discord.Interaction, *, replay_codes: str):
 
 @client.tree.command()
 @app_commands.describe(number="OPTIONAL. The number of replays to grab, always grabs the most recent ones first.")
-async def getrecentreplays(interaction: discord.Interaction, number: int | None=None):
+async def getrecentreplays(interaction: discord.Interaction, number: int=30):
     """Loads data from the 30 most recently uploaded replays available in Splatnet. A number to fetch can be specified"""
     if number:
         if number > 30:
