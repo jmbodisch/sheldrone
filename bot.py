@@ -188,7 +188,7 @@ async def getbatch(interaction: discord.Interaction, *, replay_codes: str):
 
 @client.tree.command()
 @app_commands.describe(number="OPTIONAL. The number of replays to grab, always grabs the most recent ones first.")
-async def getrecentreplays(interaction: discord.Interaction, number: int | None=None):
+async def getrecentreplays(interaction: discord.Interaction, number: int=30):
     """Loads data from the 30 most recently uploaded replays available in Splatnet. A number to fetch can be specified"""
     if number:
         if number > 30:
@@ -201,33 +201,38 @@ async def getrecentreplays(interaction: discord.Interaction, number: int | None=
     if tokens:
         replays = scraper.get_replay_history(tokens)
         if replays:
-            if len(replays) > 30:
-                replays = replays[:30]
+            if len(replays) < number:
+                number = len(replays)
             ids=list()
-            for r in range(number):
-                ids.append(replays[r]['id'])
-            a = scraper.get_user_info(tokens)
-            e = display.genBatch(replays, a, number)
-            v = display.Batch(tokens, ids)
-            b = scraper.create_batch_bin(ids)
-            sfx = v.children[0].custom_id.split(':')[2]
-            f = open(f'batch{sfx}', 'bw+')
-            f.write(b)
-            f.seek(0)
-            file = discord.File(f, f'batch{sfx}')
-            if len(e) > 1:
-                try:
-                    await interaction.followup.send(embeds=e, view=v, file=file)
-                except HTTPException as response:
-                    if response.code==50035:
-                        e = {'title':'Error','description':'Replay Batch Embed too large. Try requesting a smaller number of replays, remember the default number requested is 30.'}
-                        e = discord.Embed.from_dict(e)
-                        await interaction.followup.send(embed=e)
-            else:
-                await interaction.followup.send(embed=e[0], view=v, file=file)
-            f.close()
-            if os.path.exists(f'batch{sfx}'):
-                os.remove(f'batch{sfx}')
+            try:
+                for r in range(number):
+                    ids.append(replays[r]['id'])
+                a = scraper.get_user_info(tokens)
+                e = display.genBatch(replays, a, count=number)
+                v = display.Batch(tokens, ids)
+                b = scraper.create_batch_bin(ids)
+                sfx = v.children[0].custom_id.split(':')[2]
+                f = open(f'batch{sfx}', 'bw+')
+                f.write(b)
+                f.seek(0)
+                file = discord.File(f, f'batch{sfx}')
+                if len(e) > 1:
+                    try:
+                        await interaction.followup.send(embeds=e, view=v, file=file)
+                    except HTTPException as response:
+                        if response.code==50035:
+                            e = {'title':'Error','description':'Replay Batch Embed too large. Try requesting a smaller number of replays, remember the default number requested is 30.'}
+                            e = discord.Embed.from_dict(e)
+                            await interaction.followup.send(embed=e)
+                else:
+                    await interaction.followup.send(embed=e[0], view=v, file=file)
+                f.close()
+                if os.path.exists(f'batch{sfx}'):
+                    os.remove(f'batch{sfx}')
+            except:
+                e = {'title':'Error','description':'Something went wrong.'}
+                e = discord.Embed.from_dict(e)
+                await interaction.followup.send(embed=e)
     else:
         e = {'title':'Unregistered User','description':'You have not been registered with this bot yet. Run ``/register`` for more info!'}
         e = discord.Embed.from_dict(e)
